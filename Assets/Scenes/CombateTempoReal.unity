@@ -449,6 +449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocidadeMovimento: 2.5
+  alcanceDeteccao: 3
   alcanceAtaque: 1.5
   tempoSinalizacao: 0.7
   tempoRecargaAtaque: 2

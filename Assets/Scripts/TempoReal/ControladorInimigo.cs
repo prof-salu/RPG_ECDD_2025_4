@@ -8,6 +8,8 @@ public class ControladorInimigo : MonoBehaviour // Nome da classe alterado
     // Header agrupa variáveis no Inspector da Unity
     [Header("Atributos de Movimento")]
     public float velocidadeMovimento = 2.5f;
+    //Distância para começar a perseguir
+    public float alcanceDeteccao = 8f;
 
     [Header("Atributos de Combate")]
     public float alcanceAtaque = 1.5f;        // Distância para parar e atacar
@@ -26,6 +28,8 @@ public class ControladorInimigo : MonoBehaviour // Nome da classe alterado
     // Variáveis de Controle de Estado
     private bool podeAtacar = true;     // Controla a recarga (cooldown)
     private bool estaAtacando = false;  // "Trava" para não perseguir enquanto ataca
+    // Controla se o inimigo já "viu" o jogador
+    private bool jogadorDetectado = false;
 
     void Start()
     {
@@ -58,6 +62,19 @@ public class ControladorInimigo : MonoBehaviour // Nome da classe alterado
         // Calcula a distância até o jogador
         float distancia = Vector2.Distance(transform.position, alvo.position);
 
+        if (!jogadorDetectado)
+        {
+            if (distancia <= alcanceDeteccao)
+            {
+                jogadorDetectado = true; // Detectou!
+            }
+            else
+            {
+                // Se não detectou, não faz mais nada (não ataca, não persegue)
+                return;
+            }
+        }
+
         // Se está no alcance E pode atacar
         if (distancia <= alcanceAtaque && podeAtacar)
         {
@@ -71,7 +88,7 @@ public class ControladorInimigo : MonoBehaviour // Nome da classe alterado
         // FixedUpdate é o local correto para manipular o Rigidbody
 
         // Se está atacando, ou não tem alvo, para de se mover.
-        if (alvo == null || estaAtacando)
+        if (alvo == null || estaAtacando || !jogadorDetectado)
         {
             rb.linearVelocity = Vector2.zero;
             return;
@@ -131,5 +148,9 @@ public class ControladorInimigo : MonoBehaviour // Nome da classe alterado
         Gizmos.color = Color.yellow; // Define a cor do Gizmo
         // Desenha uma esfera de arame na posição do inimigo com o raio do ataque
         Gizmos.DrawWireSphere(transform.position, alcanceAtaque);
+
+        // NOVO: Gizmo do Alcance de Detecção (Ciano)
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, alcanceDeteccao);
     }
 }

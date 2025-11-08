@@ -5,7 +5,7 @@ using UnityEngine;
 public class SistemaBatalha : MonoBehaviour
 {
     //Enum -> define os possiveis estados de uma batalha
-    public enum EstadoBatalha { INICIO, TURNO_JOGADOR, TURNO_INIMIGO, VITORIA, DERROTA}
+    public enum EstadoBatalha { INICIO, TURNO_JOGADOR, TURNO_INIMIGO, VITORIA, DERROTA, OCIOSO }
 
     public EstadoBatalha estado;
 
@@ -68,7 +68,7 @@ public class SistemaBatalha : MonoBehaviour
         yield return new WaitForSeconds(1f);
         yield return StartCoroutine(ExecutarSequenciaDeAtaque(atributosInimigo, atributosJogador));
 
-        if(atributosJogador.vidaAtual <= 0)
+        if (atributosJogador.vidaAtual <= 0)
         {
             estado = EstadoBatalha.DERROTA;
         }
@@ -89,7 +89,7 @@ public class SistemaBatalha : MonoBehaviour
         while (Vector3.Distance(atacante.transform.position, posicaoAlvo) > 1.5f)
         {
             //Vecotr3.MoveTowards --> Move um gameobject na direção do alvo, a uma velocidade fixa;
-            atacante.transform.position = Vector3.MoveTowards(atacante.transform.position, 
+            atacante.transform.position = Vector3.MoveTowards(atacante.transform.position,
                                                               posicaoAlvo,
                                                               20f * Time.deltaTime);
             yield return null;
@@ -100,14 +100,14 @@ public class SistemaBatalha : MonoBehaviour
         MostrarTextoDano(atacante.dano, alvo.transform);
 
         //Animação de retorno a posição original
-        while(Vector3.Distance(atacante.transform.position, posicaoOriginal) > 0.01f)
+        while (Vector3.Distance(atacante.transform.position, posicaoOriginal) > 0.01f)
         {
             atacante.transform.position = Vector3.MoveTowards(atacante.transform.position,
                                                               posicaoOriginal,
                                                               20f * Time.deltaTime);
             yield return null;
         }
-        
+
         atacante.transform.position = posicaoOriginal;
     }
 
@@ -120,4 +120,8 @@ public class SistemaBatalha : MonoBehaviour
         texto.transform.position = Camera.main.WorldToScreenPoint(alvo.position);
     }
 
+    public void IniciarBatalha()
+    {
+
+    }
 }
